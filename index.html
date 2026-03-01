@@ -2,172 +2,52 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Filterize - ULTIMATE</title>
+    <title>Discord 匿名送信</title>
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #050505;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-family: 'Arial Black', sans-serif;
-        }
-
-        /* 背景：常にゆっくりズームするアニメーション付き */
-        .bg-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -2;
-        }
-
-        @keyframes bgZoom {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.1); }
-        }
-
-        .bg-image {
-            width: 100%;
-            height: 100%;
-            background-image: url('./背景.png'); 
-            background-size: cover;
-            background-position: center;
-            filter: blur(15px) brightness(0.4);
-            animation: bgZoom 10s infinite alternate ease-in-out;
-        }
-
-        /* アニメーション：滑り込み */
-        @keyframes ultraEntrance {
-            0% { opacity: 0; transform: scale(0.5) translateY(100px); filter: blur(20px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
-        }
-
-        /* アニメーション：虹色の光が流れる */
-        @keyframes rainbowFlow {
-            0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
-        }
-
-        .content {
-            text-align: center;
-            z-index: 10;
-        }
-
-        h1 {
-            font-size: clamp(4rem, 18vw, 8rem);
-            margin: 0;
-            /* 虹色グラデーション */
-            background: linear-gradient(90deg, #ff00de, #ff0055, #ffcc00, #00ffcc, #0066ff, #ff00de);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: ultraEntrance 1s cubic-bezier(0.17, 0.67, 0.83, 0.67), rainbowFlow 3s linear infinite;
-            text-shadow: 0 0 30px rgba(255, 0, 222, 0.3);
-        }
-
-        .subtitle {
-            font-size: 1.5rem;
-            color: #fff;
-            margin: -10px 0 50px 0;
-            letter-spacing: 5px;
-            text-transform: uppercase;
-            animation: ultraEntrance 1s cubic-bezier(0.17, 0.67, 0.83, 0.67) 0.2s forwards;
-            opacity: 0;
-        }
-
-        /* 派手なネオンボタン */
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 20px rgba(255, 0, 222, 0.6); transform: scale(1); }
-            100% { box-shadow: 0 0 50px rgba(255, 0, 222, 1); transform: scale(1.05); }
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 25px 80px;
-            border-radius: 50px;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            font-size: 1.5rem;
-            background: linear-gradient(45deg, #ff00cc, #3333ff);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            animation: ultraEntrance 1s cubic-bezier(0.17, 0.67, 0.83, 0.67) 0.4s forwards, pulseGlow 1.5s infinite alternate ease-in-out;
-            opacity: 0;
-            transition: 0.2s;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            filter: brightness(1.3) contrast(1.2);
-            letter-spacing: 3px;
-        }
-
-        /* パーティクル（キラキラ）のスタイル */
-        .particle {
-            position: fixed;
-            pointer-events: none;
-            background: white;
-            border-radius: 50%;
-            z-index: 100;
-            animation: particleFade 0.8s forwards;
-        }
-
-        @keyframes particleFade {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(0); opacity: 0; }
-        }
+        body { font-family: sans-serif; padding: 20px; text-align: center; }
+        textarea { width: 100%; max-width: 400px; height: 100px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc; padding: 10px; }
+        button { background-color: #5865F2; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        button:hover { background-color: #4752c4; }
     </style>
 </head>
 <body>
 
-    <div class="bg-container">
-        <div class="bg-image"></div>
-    </div>
-
-    <div class="content">
-        <h1>Filterize</h1>
-        <p class="subtitle">The best anti loilofilter</p>
-        <a href="https://www.dropbox.com/scl/fi/jhjaiww74lcgo741zqnng/.exe?rlkey=tv4zztnvfql4sd4c4nfsncioz&st=vwymdduv&dl=1" class="btn">
-            DOWNLOAD NOW
-        </a>
-    </div>
+    <h2>Discordへ匿名メッセージを送る</h2>
+    <textarea id="message" placeholder="ここにメッセージを入力してください"></textarea><br>
+    <button onclick="sendToDiscord()">送信する</button>
 
     <script>
-        // 派手なパーティクル演出
-        document.addEventListener('mousemove', (e) => {
-            for (let i = 0; i < 2; i++) { // 一度に2つの粒子を生成
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                
-                // 大きさをランダムに
-                const size = Math.random() * 10 + 5 + 'px';
-                particle.style.width = size;
-                particle.style.height = size;
+    async function sendToDiscord() {
+        const url = "https://discordapp.com/api/webhooks/1477645908324646925/bKOASQBtKH-P2Wufi_MB_YDqK5KvmYrydgU_RyQ36KkE5kRNHuuBjjhmPj9FzgTrHVD8";
+        const content = document.getElementById('message').value;
 
-                // 色をランダムに（ネオンカラー）
-                const colors = ['#ff00de', '#00ffcc', '#0066ff', '#ffcc00'];
-                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-                particle.style.boxShadow = `0 0 10px ${particle.style.background}`;
+        if (!content) {
+            alert("メッセージを入力してください！");
+            return;
+        }
 
-                // 位置を少し散らす
-                particle.style.left = (e.pageX + (Math.random() - 0.5) * 20) + 'px';
-                particle.style.top = (e.pageY + (Math.random() - 0.5) * 20) + 'px';
-                
-                document.body.appendChild(particle);
+        const payload = {
+            content: "📩 **HTMLからメッセージが届きました：**\n" + content
+        };
 
-                setTimeout(() => {
-                    particle.remove();
-                }, 800);
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok) {
+                alert("送信完了しました！");
+                document.getElementById('message').value = "";
+            } else {
+                alert("送信に失敗しました。ステータス: " + response.status);
             }
-        });
+        } catch (error) {
+            alert("エラーが発生しました: " + error);
+        }
+    }
     </script>
+
 </body>
 </html>
